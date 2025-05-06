@@ -40,7 +40,7 @@ void updateBalloon(Balloon *balloon) {
     float targetX = (float)balloon->pathX[balloon->pathIndex + 1];
     float targetY = (float)balloon->pathY[balloon->pathIndex + 1];
     
-    // Direction vers la cible
+    // Direction vers la cible 
     float dx = targetX - balloon->x;
     float dy = targetY - balloon->y;
     
@@ -81,3 +81,5 @@ void drawBalloon(Balloon *balloon, int cellSize) {
     // Dessiner le ballon comme un cercle
     DrawCircle((int)screenX, (int)screenY, cellSize / 3, RED);
 }
+
+// comentaire test
