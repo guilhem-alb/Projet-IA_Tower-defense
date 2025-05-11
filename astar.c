@@ -114,7 +114,7 @@ int manhattanDistance(int x1, int y1, int x2, int y2) {
 }
 
 // Implémentation de l'algorithme A*
-int** aStarSearch(Maze *maze, int startX, int startY, int goalX, int goalY, int *pathLength) {
+int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY, int *pathLength) {
     // Créer les listes ouverte et fermée
     NodeList *openList = createNodeList(100);
     NodeList *closedList = createNodeList(100);

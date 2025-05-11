@@ -21,6 +21,6 @@ Tower* createTower(int x, int y, int range, float reloadTime);
 void freeTower(Tower *tower);
 Projectile* updateTower(Tower *tower, Balloon **balloons, int balloonCount);
 void drawTower(Tower *tower, int cellSize);
-bool canPlaceTower(Maze *maze, int x, int y);
+bool canPlaceTower(Labyrinthe *maze, int x, int y);
 
 #endif // TOWER_H

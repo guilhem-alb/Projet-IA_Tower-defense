@@ -25,7 +25,7 @@ int main(void) {
     int mazeHeight = SCREEN_HEIGHT / CELL_SIZE;
     
     // Création du labyrinthe
-    Maze *maze = createMaze(mazeWidth, mazeHeight, 1, 1);  // 1 entrée, 1 sortie
+    Labyrinthe *maze = createMaze(mazeWidth, mazeHeight, 1, 1);  // 1 entrée, 1 sortie
 
     
     // Génération du labyrinthe

@@ -28,6 +28,6 @@ bool isInNodeList(NodeList *list, int x, int y);
 AStarNode* getNodeFromList(NodeList *list, int x, int y);
 void removeFromNodeList(NodeList *list, AStarNode *node);
 int manhattanDistance(int x1, int y1, int x2, int y2);
-int** aStarSearch(Maze *maze, int startX, int startY, int goalX, int goalY, int *pathLength);
+int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY, int *pathLength);
 
 #endif // ASTAR_H

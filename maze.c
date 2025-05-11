@@ -5,8 +5,8 @@
 #include "raylib.h"
 
 // Création d'un labyrinthe vide
-Maze* createMaze(int width, int height, int numEntries, int numExits) {
-    Maze *maze = (Maze*) malloc(sizeof(Maze));
+Labyrinthe* createMaze(int width, int height, int numEntries, int numExits) {
+    Labyrinthe *maze = (Labyrinthe*) malloc(sizeof(Labyrinthe));
 
     
     // Initialisation des dimensions
@@ -22,7 +22,7 @@ Maze* createMaze(int width, int height, int numEntries, int numExits) {
     for (int i = 0; i < height; i++) {
         maze->grid[i] = (Case*) malloc(width * sizeof(Case));
         
-        // Initialisation des Caseules
+        // Initialisation des cellules
         for (int j = 0; j < width; j++) {
             maze->grid[i][j].type = WALL;  // Tout est mur par défaut
             maze->grid[i][j].visited = false;
@@ -40,7 +40,7 @@ Maze* createMaze(int width, int height, int numEntries, int numExits) {
 }
 
 // Libération de la mémoire du labyrinthe
-void freeMaze(Maze *maze) {
+void freeMaze(Labyrinthe *maze) {
     if (maze == NULL) return;
     
     if (maze->grid != NULL) {
@@ -61,7 +61,7 @@ void freeMaze(Maze *maze) {
 }
 
 // Fonction pour vérifier si une position est valide
-bool isValid(Maze *maze, int x, int y) {
+bool isValid(Labyrinthe *maze, int x, int y) {
     return (x >= 0 && x < maze->width && y >= 0 && y < maze->height);
 }
 
@@ -88,8 +88,8 @@ void shuffleArray(int *array, int size) {
 }
 
 // Implémentation récursive de l'algorithme de creusement du labyrinthe
-void carvePath(Maze *maze, int x, int y) {
-    // Marquer la Caseule comme visitée et comme chemin
+void carvePath(Labyrinthe *maze, int x, int y) {
+    // Marquer la cellule comme visitée et comme chemin
     maze->grid[y][x].visited = true;
     maze->grid[y][x].type = PATH;
     
@@ -100,22 +100,22 @@ void carvePath(Maze *maze, int x, int y) {
     // Explorer dans toutes les directions
     for (int i = 0; i < 4; i++) {
         int dir = directions[i];
-        int nx = x + DX[dir] * 2; // Sauter une Caseule pour laisser de l'espace entre les chemins
+        int nx = x + DX[dir] * 2; // Sauter une cellule pour laisser de l'espace entre les chemins
         int ny = y + DY[dir] * 2;
         
         // Vérifier si la nouvelle position est valide et non visitée
         if (isValid(maze, nx, ny) && !maze->grid[ny][nx].visited) {
-            // Creuser un passage entre la Caseule actuelle et la nouvelle Caseule
+            // Creuser un passage entre la cellule actuelle et la nouvelle cellule
             maze->grid[y + DY[dir]][x + DX[dir]].type = PATH;
             
-            // Continuer depuis la nouvelle Caseule
+            // Continuer depuis la nouvelle cellule
             carvePath(maze, nx, ny);
         }
     }
 }
 
 // Fonction principale de génération du labyrinthe
-void generateMaze(Maze *maze) {
+void generateMaze(Labyrinthe *maze) {
     // Initialiser le générateur de nombres aléatoires
     srand(time(NULL));
     
@@ -161,7 +161,7 @@ void generateMaze(Maze *maze) {
             if (x >= maze->width) x = maze->width - 1;
             if (y >= maze->height) y = maze->height - 1;
             
-            // Vérifier que la Caseule adjacente est un chemin
+            // Vérifier que la cellule adjacente est un chemin
             adjX = x + (entrySide == 3 ? 1 : (entrySide == 1 ? -1 : 0));
             adjY = y + (entrySide == 0 ? 1 : (entrySide == 2 ? -1 : 0));
             
@@ -207,7 +207,7 @@ void generateMaze(Maze *maze) {
                 if (exitX >= maze->width) exitX = maze->width - 1;
                 if (exitY >= maze->height) exitY = maze->height - 1;
                 
-                // Vérifier que la Caseule adjacente est un chemin
+                // Vérifier que la cellule adjacente est un chemin
                 adjExitX = exitX + (exitSide == 3 ? 1 : (exitSide == 1 ? -1 : 0));
                 adjExitY = exitY + (exitSide == 0 ? 1 : (exitSide == 2 ? -1 : 0));
                 
@@ -225,10 +225,10 @@ void generateMaze(Maze *maze) {
 }
 
 // Fonction pour afficher le labyrinthe
-void drawMaze(Maze *maze, int CaseSize) {
+void drawMaze(Labyrinthe *maze, int tailleCase) {
     for (int y = 0; y < maze->height; y++) {
         for (int x = 0; x < maze->width; x++) {
-            Rectangle rect = {x * CaseSize, y * CaseSize, CaseSize, CaseSize};
+            Rectangle rect = {x * tailleCase, y * tailleCase, tailleCase, tailleCase};
             
             switch (maze->grid[y][x].type) {
                 case WALL:
@@ -249,7 +249,7 @@ void drawMaze(Maze *maze, int CaseSize) {
                     break;
             }
             
-            // Dessin de la bordure des Caseules
+            // Dessin de la bordure des cellules
             DrawRectangleLinesEx(rect, 1, BLACK);
         }
     }

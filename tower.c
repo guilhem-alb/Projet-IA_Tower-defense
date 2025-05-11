@@ -88,7 +88,7 @@ void drawTower(Tower *tower, int cellSize) {
 }
 
 // Vérifier si une tour peut être placée à une position spécifique
-bool canPlaceTower(Maze *maze, int x, int y) {
+bool canPlaceTower(Labyrinthe *maze, int x, int y) {
     // Vérifier si la position est valide
     if (!isValid(maze, x, y)) return false;
     
