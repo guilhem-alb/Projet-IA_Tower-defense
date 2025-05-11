@@ -65,15 +65,7 @@ bool isValid(Labyrinthe *maze, int x, int y) {
     return (x >= 0 && x < maze->width && y >= 0 && y < maze->height);
 }
 
-// Direction pour la génération du labyrinthe
-typedef enum {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
-} Direction;
-
-// Directions pour la génération du labyrinthe
+// directions pour la génération du labyrinthe
 const int DX[4] = {0, 1, 0, -1};  // NORTH, EAST, SOUTH, WEST
 const int DY[4] = {-1, 0, 1, 0};
 
