@@ -3,26 +3,26 @@
 
 #include <stdbool.h>
 
-// Type de cellule dans le labyrinthe
+// Type de Caseule dans le labyrinthe
 typedef enum {
     WALL,       // Mur
     PATH,       // Chemin
     ENTRY,      // Entrée
     EXIT        // Sortie
-} CellType;
+} CaseType;
 
-// Structure représentant une cellule du labyrinthe
+// Structure représentant une Caseule du labyrinthe
 typedef struct {
-    CellType type;
+    CaseType type;
     bool visited;      // Pour l'algorithme de génération du labyrinthe
-    bool inPath;       // Pour marquer les cellules faisant partie du chemin calculé
-} Cell;
+    bool inPath;       // Pour marquer les Caseules faisant partie du chemin calculé
+} Case;
 
 // Structure représentant le labyrinthe
 typedef struct {
     int width;
     int height;
-    Cell **grid;       // Grille 2D de cellules
+    Case **grid;       // Grille 2D de Caseules
     int numEntries;
     int numExits;
     int *entryX;       // Coordonnées X des entrées
@@ -36,6 +36,6 @@ Maze* createMaze(int width, int height, int numEntries, int numExits);
 void generateMaze(Maze *maze);
 void freeMaze(Maze *maze);
 bool isValid(Maze *maze, int x, int y);
-void drawMaze(Maze *maze, int cellSize);
+void drawMaze(Maze *maze, int CaseSize);
 
 #endif // MAZE_H
