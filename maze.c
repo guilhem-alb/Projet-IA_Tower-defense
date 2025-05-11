@@ -20,14 +20,8 @@ Labyrinthe* createMaze(int width, int height, int numEntries, int numExits) {
 
     
     for (int i = 0; i < height; i++) {
-        maze->grid[i] = (Case*) malloc(width * sizeof(Case));
+        maze->grid[i] = (Case*) calloc(width, sizeof(Case)); // initialise les cellules avec tous leurs attributs à 0
         
-        // Initialisation des cellules
-        for (int j = 0; j < width; j++) {
-            maze->grid[i][j].type = WALL;  // Tout est mur par défaut
-            maze->grid[i][j].visited = false;
-            maze->grid[i][j].inPath = false;
-        }
     }
     
     // Allocation des tableaux d'entrées et sorties
