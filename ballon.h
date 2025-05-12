@@ -1,5 +1,5 @@
-#ifndef BALLOON_H
-#define BALLOON_H
+#ifndef BALLON_H
+#define BALLON_H
 
 #include <stdbool.h>
 #include <math.h>
@@ -14,12 +14,12 @@ typedef struct {
     int *pathY;        // Tableau des coordonnées Y du chemin
     int pathLength;    // Longueur du chemin
     bool active;       // Si le ballon est actif (visible à l'écran)
-} Balloon;
+} Ballon;
 
 // Prototypes des fonctions
-Balloon* createBalloon(int startX, int startY, int *pathX, int *pathY, int pathLength, float speed);
-void freeBalloon(Balloon *balloon);
-void updateBalloon(Balloon *balloon);
-void drawBalloon(Balloon *balloon, int cellSize);
+Ballon* creerBallon(int startX, int startY, int *pathX, int *pathY, int pathLength, float speed);
+void freeBalon(Ballon *ballon);
+void updateBalon(Ballon *ballon);
+void drawBalon(Ballon *ballon, int cellSize);
 
-#endif // BALLOON_H
+#endif // BALloN_H
