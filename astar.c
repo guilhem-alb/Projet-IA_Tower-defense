@@ -5,14 +5,12 @@
 #include "astar.h"
 
 // Création d'une liste de nœuds
-NodeList* createNodeList(int initialCapacity) {
+NodeList* createNodeList() {
     NodeList *list = (NodeList*) malloc(sizeof(NodeList));
     
-    list->nodes = (AStarNode**) malloc(initialCapacity * sizeof(AStarNode*));
+    list->nodes = (AStarNode**) malloc(100 * sizeof(AStarNode*));
     
-    list->size = 0;
-    list->capacity = initialCapacity;
-    
+    list->taille = 0;    
     return list;
 }
 
@@ -22,7 +20,7 @@ void freeNodeList(NodeList *list) {
     
     if (list->nodes != NULL) {
         // Libération de chaque nœud
-        for (int i = 0; i < list->size; i++) {
+        for (int i = 0; i < list->taille; i++) {
             if (list->nodes[i] != NULL) {
                 free(list->nodes[i]);
             }
@@ -34,29 +32,19 @@ void freeNodeList(NodeList *list) {
 }
 
 // Ajout d'un nœud à une liste
-void addToNodeList(NodeList *list, AStarNode *node) {
-    // Vérifier si la liste est pleine
-    if (list->size >= list->capacity) {
-        // Doubler la capacité
-        int newCapacity = list->capacity * 2;
-        AStarNode **newNodes = (AStarNode**) realloc(list->nodes, newCapacity * sizeof(AStarNode*));
-
-        list->nodes = newNodes;
-        list->capacity = newCapacity;
-    }
-    
+void ajoutNode(NodeList *list, AStarNode *node) {
     // Ajouter le nœud
-    list->nodes[list->size] = node;
-    list->size++;
+    list->nodes[list->taille] = node;
+    list->taille++;
 }
 
 // Retirer le nœud avec la valeur f la plus basse
-AStarNode* removeNodeWithLowestF(NodeList *list) {
-    if (list->size == 0) return NULL;
+AStarNode* suppNodeF(NodeList *list) {
+    if (list->taille == 0) return NULL;
     
     // Trouver l'index du nœud avec le f minimum
     int minIndex = 0;
-    for (int i = 1; i < list->size; i++) {
+    for (int i = 1; i < list->taille; i++) {
         if (list->nodes[i]->f < list->nodes[minIndex]->f) {
             minIndex = i;
         }
@@ -66,17 +54,17 @@ AStarNode* removeNodeWithLowestF(NodeList *list) {
     AStarNode *node = list->nodes[minIndex];
     
     // Déplacer le dernier nœud à la position du nœud retiré
-    list->size--;
-    if (minIndex < list->size) {
-        list->nodes[minIndex] = list->nodes[list->size];
+    list->taille--;
+    if (minIndex < list->taille) {
+        list->nodes[minIndex] = list->nodes[list->taille];
     }
     
     return node;
 }
 
 // Vérifier si un nœud avec les coordonnées (x, y) est dans la liste
-bool isInNodeList(NodeList *list, int x, int y) {
-    for (int i = 0; i < list->size; i++) {
+bool existeNode(NodeList *list, int x, int y) {
+    for (int i = 0; i < list->taille; i++) {
         if (list->nodes[i]->x == x && list->nodes[i]->y == y) {
             return true;
         }
@@ -85,8 +73,8 @@ bool isInNodeList(NodeList *list, int x, int y) {
 }
 
 // Récupérer un nœud avec les coordonnées (x, y) depuis la liste
-AStarNode* getNodeFromList(NodeList *list, int x, int y) {
-    for (int i = 0; i < list->size; i++) {
+AStarNode* recupNode(NodeList *list, int x, int y) {
+    for (int i = 0; i < list->taille; i++) {
         if (list->nodes[i]->x == x && list->nodes[i]->y == y) {
             return list->nodes[i];
         }
@@ -95,13 +83,13 @@ AStarNode* getNodeFromList(NodeList *list, int x, int y) {
 }
 
 // Retirer un nœud spécifique de la liste
-void removeFromNodeList(NodeList *list, AStarNode *node) {
-    for (int i = 0; i < list->size; i++) {
+void suppNode(NodeList *list, AStarNode *node) {
+    for (int i = 0; i < list->taille; i++) {
         if (list->nodes[i] == node) {
             // Déplacer le dernier nœud à la position du nœud retiré
-            list->size--;
-            if (i < list->size) {
-                list->nodes[i] = list->nodes[list->size];
+            list->taille--;
+            if (i < list->taille) {
+                list->nodes[i] = list->nodes[list->taille];
             }
             return;
         }
@@ -109,38 +97,38 @@ void removeFromNodeList(NodeList *list, AStarNode *node) {
 }
 
 // Calcul de la distance de Manhattan entre deux points
-int manhattanDistance(int x1, int y1, int x2, int y2) {
+int distance(int x1, int y1, int x2, int y2) {
     return abs(x1 - x2) + abs(y1 - y2);
 }
 
 // Implémentation de l'algorithme A*
-int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY, int *pathLength) {
+int** recherche_astar(Labyrinthe *laby, int arrivX, int arrivY, int goalX, int goalY, int *tailleChemin) {
     // Créer les listes ouverte et fermée
-    NodeList *openList = createNodeList(100);
-    NodeList *closedList = createNodeList(100);
+    NodeList *openList = createNodeList();
+    NodeList *closedList = createNodeList();
     
     // Créer le nœud de départ
-    AStarNode *startNode = (AStarNode*) malloc(sizeof(AStarNode));
+    AStarNode *arrivNode = (AStarNode*) malloc(sizeof(AStarNode));
 
     
-    startNode->x = startX;
-    startNode->y = startY;
-    startNode->g = 0;
-    startNode->h = manhattanDistance(startX, startY, goalX, goalY);
-    startNode->f = startNode->g + startNode->h;
-    startNode->parent = NULL;
+    arrivNode->x = arrivX;
+    arrivNode->y = arrivY;
+    arrivNode->g = 0;
+    arrivNode->h = distance(arrivX, arrivY, goalX, goalY);
+    arrivNode->f = arrivNode->g + arrivNode->h;
+    arrivNode->parent = NULL;
     
     // Ajouter le nœud de départ à la liste ouverte
-    addToNodeList(openList, startNode);
+    ajoutNode(openList, arrivNode);
     
     // Directions pour les voisins
     const int dx[4] = {0, 1, 0, -1};  // Haut, Droite, Bas, Gauche
     const int dy[4] = {-1, 0, 1, 0};
     
     // Boucle principale de A*
-    while (openList->size > 0) {
+    while (openList->taille > 0) {
         // Prendre le nœud avec le f minimum de la liste ouverte
-        AStarNode *currentNode = removeNodeWithLowestF(openList);
+        AStarNode *currentNode = suppNodeF(openList);
         
         // Vérifier si on a atteint l'objectif
         if (currentNode->x == goalX && currentNode->y == goalY) {
@@ -169,12 +157,12 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
             }
             
             // Mettre à jour la longueur du chemin
-            *pathLength = count;
+            *tailleChemin = count;
             
             // Marquer les cellules du chemin
             for (int i = 0; i < count; i++) {
-                if (maze->grid[path[1][i]][path[0][i]].type == PATH) {
-                    maze->grid[path[1][i]][path[0][i]].inPath = true;
+                if (laby->grid[path[1][i]][path[0][i]].type == PATH) {
+                    laby->grid[path[1][i]][path[0][i]].inPath = true;
                 }
             }
             
@@ -186,7 +174,7 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
         }
         
         // Ajouter le nœud courant à la liste fermée
-        addToNodeList(closedList, currentNode);
+        ajoutNode(closedList, currentNode);
         
         // Explorer les voisins
         for (int i = 0; i < 4; i++) {
@@ -194,20 +182,20 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
             int ny = currentNode->y + dy[i];
             
             // Vérifier si la position est valide
-            if (!isValid(maze, nx, ny)) continue;
+            if (!isValid(laby, nx, ny)) continue;
             
             // Vérifier si c'est un mur
-            if (maze->grid[ny][nx].type == WALL) continue;
+            if (laby->grid[ny][nx].type == WALL) continue;
             
             // Vérifier si le nœud est déjà dans la liste fermée
-            if (isInNodeList(closedList, nx, ny)) continue;
+            if (existeNode(closedList, nx, ny)) continue;
             
             // Calculer le nouveau coût g
             int newG = currentNode->g + 1;
             
             // Vérifier si le nœud est dans la liste ouverte
-            if (isInNodeList(openList, nx, ny)) {
-                AStarNode *existingNode = getNodeFromList(openList, nx, ny);
+            if (existeNode(openList, nx, ny)) {
+                AStarNode *existingNode = recupNode(openList, nx, ny);
                 
                 // Vérifier si le nouveau chemin est meilleur
                 if (newG < existingNode->g) {
@@ -223,12 +211,12 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
                 newNode->x = nx;
                 newNode->y = ny;
                 newNode->g = newG;
-                newNode->h = manhattanDistance(nx, ny, goalX, goalY);
+                newNode->h = distance(nx, ny, goalX, goalY);
                 newNode->f = newNode->g + newNode->h;
                 newNode->parent = currentNode;
                 
                 // Ajouter à la liste ouverte
-                addToNodeList(openList, newNode);
+                ajoutNode(openList, newNode);
             }
         }
     }

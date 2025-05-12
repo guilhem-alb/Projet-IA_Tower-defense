@@ -15,19 +15,18 @@ typedef struct AStarNode {
 // Structure pour une liste de nœuds
 typedef struct {
     AStarNode **nodes;  // Tableau dynamique de pointeurs vers des nœuds
-    int size;           // Nombre d'éléments dans la liste
-    int capacity;       // Capacité actuelle du tableau
+    int taille;           // Nombre d'éléments dans la liste
 } NodeList;
 
 // Prototypes des fonctions
-NodeList* createNodeList(int initialCapacity);
+NodeList* createNodeList();
 void freeNodeList(NodeList *list);
-void addToNodeList(NodeList *list, AStarNode *node);
-AStarNode* removeNodeWithLowestF(NodeList *list);
-bool isInNodeList(NodeList *list, int x, int y);
-AStarNode* getNodeFromList(NodeList *list, int x, int y);
-void removeFromNodeList(NodeList *list, AStarNode *node);
-int manhattanDistance(int x1, int y1, int x2, int y2);
-int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY, int *pathLength);
+void ajoutNode(NodeList *list, AStarNode *node);
+AStarNode* suppNodeF(NodeList *list);
+bool existeNode(NodeList *list, int x, int y);
+AStarNode* recupNode(NodeList *list, int x, int y);
+void suppNode(NodeList *list, AStarNode *node);
+int distance(int x1, int y1, int x2, int y2);
+int** recherche_astar(Labyrinthe *laby, int startX, int startY, int arrivX, int arrivY, int *tailleChemin);
 
 #endif // ASTAR_H

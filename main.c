@@ -17,24 +17,24 @@
 
 int main(void) {
     // Initialisation de la fenêtre
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Balloon Maze Defense");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Balloon laby Defense");
     SetTargetFPS(60);
     
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
-    int mazeWidth = SCREEN_WIDTH / CELL_SIZE;
-    int mazeHeight = SCREEN_HEIGHT / CELL_SIZE;
+    int labyWidth = SCREEN_WIDTH / CELL_SIZE;
+    int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
     
     // Création du labyrinthe
-    Labyrinthe *maze = createMaze(mazeWidth, mazeHeight, 1, 1);  // 1 entrée, 1 sortie
+    Labyrinthe *laby = createMaze(labyWidth, labyHeight, 1, 1);  // 1 entrée, 1 sortie
 
     
     // Génération du labyrinthe
-    generateMaze(maze);
+    generateMaze(laby);
     
     // Calcul du chemin avec A*
-    int pathLength = 0;
-    int **path = aStarSearch(maze, maze->entryX[0], maze->entryY[0], 
-                             maze->exitX[0], maze->exitY[0], &pathLength);
+    int cheminTaille = 0;
+    int **path = recherche_astar(laby, laby->entryX[0], laby->entryY[0], 
+                              laby->exitX[0], laby->exitY[0], &cheminTaille);
     
 
     // Création des ballons
@@ -57,8 +57,8 @@ int main(void) {
         
         // Créer un nouveau ballon toutes les 15 frames
         if (frameCounter >= 15 && balloonCount < MAX_BALLOONS) {
-            balloons[balloonCount] = createBalloon(maze->entryX[0], maze->entryY[0], 
-                                                 path[0], path[1], pathLength, 0.07f);
+            balloons[balloonCount] = createBalloon(laby->entryX[0], laby->entryY[0], 
+                                                 path[0], path[1], cheminTaille, 0.07f);
             if (balloons[balloonCount] != NULL) {
                 balloonCount++;
             }
@@ -110,7 +110,7 @@ int main(void) {
             int gridX = (int)(mousePos.x / CELL_SIZE);
             int gridY = (int)(mousePos.y / CELL_SIZE);
             
-            if (canPlaceTower(maze, gridX, gridY) && towerCount < MAX_TOWERS) {
+            if (canPlaceTower(laby, gridX, gridY) && towerCount < MAX_TOWERS) {
                 towers[towerCount] = createTower(gridX, gridY, 3, 1.0f);
                 if (towers[towerCount] != NULL) {
                     towerCount++;
@@ -123,7 +123,7 @@ int main(void) {
         ClearBackground(RAYWHITE);
         
         // Dessiner le labyrinthe
-        drawMaze(maze, CELL_SIZE);
+        drawMaze(laby, CELL_SIZE);
         
         // Dessiner les ballons
         for (int i = 0; i < balloonCount; i++) {
@@ -174,7 +174,7 @@ int main(void) {
         free(path);
     }
     
-    freeMaze(maze);
+    freeMaze(laby);
     
     // Fermeture de la fenêtre
     CloseWindow();
