@@ -4,19 +4,19 @@
 #include "raylib.h"
 
 // Création d'un ballon
-Ballon* createBallon(int startX, int startY, int *pathX, int *pathY, int pathLength, float speed) {
+Ballon* createBallon(int startX, int startY, int *cheminX, int *cheminY, int cheminLength, float vitesse) {
     Ballon *ballon = (Ballon*) malloc(sizeof(Ballon));
 
     
     // Position initiale (au centre de la cellule)
     ballon->x = (float)startX;
     ballon->y = (float)startY;
-    ballon->speed = speed;
-    ballon->pathIndex = 0;
-    ballon->pathX = pathX;
-    ballon->pathY = pathY;
-    ballon->pathLength = pathLength;
-    ballon->active = true;
+    ballon->vitesse = vitesse;
+    ballon->cheminIndex = 0;
+    ballon->cheminX = cheminX;
+    ballon->cheminY = cheminY;
+    ballon->cheminLength = cheminLength;
+    ballon->actif = true;
     
     return ballon;
 }
@@ -25,20 +25,20 @@ Ballon* createBallon(int startX, int startY, int *pathX, int *pathY, int pathLen
 void freeBallon(Ballon *ballon) {
     if (ballon == NULL) return;
     
-    // Ne pas libérer pathX et pathY car ils sont partagés entre plusieurs ballons
+    // Ne pas libérer cheminX et cheminY car ils sont partagés entre plusieurs ballons
     free(ballon);
 }
 
 // Mise à jour de la position d'un ballon
 void updateBallon(Ballon *ballon) {
-    if (!ballon->active || ballon->pathIndex >= ballon->pathLength - 1) {
-        ballon->active = false;
+    if (!ballon->actif || ballon->cheminIndex >= ballon->cheminLength - 1) {
+        ballon->actif = false;
         return;
     }
     
     // Coordonnées cibles (où le ballon se dirige)
-    float targetX = (float)ballon->pathX[ballon->pathIndex + 1];
-    float targetY = (float)ballon->pathY[ballon->pathIndex + 1];
+    float targetX = (float)ballon->cheminX[ballon->cheminIndex + 1];
+    float targetY = (float)ballon->cheminY[ballon->cheminIndex + 1];
     
     // Direction vers la cible 
     float dx = targetX - ballon->x;
@@ -52,27 +52,27 @@ void updateBallon(Ballon *ballon) {
     }
     
     // Déplacer le ballon
-    ballon->x += dx * ballon->speed;
-    ballon->y += dy * ballon->speed;
+    ballon->x += dx * ballon->vitesse;
+    ballon->y += dy * ballon->vitesse;
     
     // Vérifier si on a atteint la cible
     float distanceSquared = (ballon->x - targetX) * (ballon->x - targetX) +
                            (ballon->y - targetY) * (ballon->y - targetY);
     
-    if (distanceSquared < ballon->speed * ballon->speed) {
+    if (distanceSquared < ballon->vitesse * ballon->vitesse) {
         // Passer au prochain point du chemin
-        ballon->pathIndex++;
+        ballon->cheminIndex++;
         
         // Vérifier si on a atteint la fin du chemin
-        if (ballon->pathIndex >= ballon->pathLength - 1) {
-            ballon->active = false;
+        if (ballon->cheminIndex >= ballon->cheminLength - 1) {
+            ballon->actif = false;
         }
     }
 }
 
 // Dessin d'un ballon
 void drawBallon(Ballon *ballon, int cellSize) {
-    if (!ballon->active) return;
+    if (!ballon->actif) return;
     
     // Calculer les coordonnées à l'écran
     float screenX = ballon->x * cellSize + cellSize / 2;
