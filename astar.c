@@ -182,7 +182,7 @@ int** recherche_astar(Labyrinthe *laby, int arrivX, int arrivY, int goalX, int g
             int ny = currentNode->y + dy[i];
             
             // Vérifier si la position est valide
-            if (!isValid(laby, nx, ny)) continue;
+            if (!positionValide(laby, nx, ny)) continue;
             
             // Vérifier si c'est un mur
             if (laby->grille[ny][nx].type == MUR) continue;
