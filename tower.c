@@ -90,7 +90,7 @@ void drawTower(Tower *tower, int cellSize) {
 // Vérifier si une tour peut être placée à une position spécifique
 bool canPlaceTower(Labyrinthe *maze, int x, int y) {
     // Vérifier si la position est valide
-    if (!isValid(maze, x, y)) return false;
+    if (!positionValide(maze, x, y)) return false;
     
     // Vérifier si la cellule est un mur
     if (maze->grille[y][x].type != MUR) return false;
@@ -104,7 +104,7 @@ bool canPlaceTower(Labyrinthe *maze, int x, int y) {
         int nx = x + dx[i];
         int ny = y + dy[i];
         
-        if (isValid(maze, nx, ny) && maze->grille[ny][nx].type == CHEMIN) {
+        if (positionValide(maze, nx, ny) && maze->grille[ny][nx].type == CHEMIN) {
             return true;
         }
     }

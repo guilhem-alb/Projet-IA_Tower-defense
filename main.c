@@ -25,11 +25,11 @@ int main(void) {
     int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
     
     // Création du labyrinthe
-    Labyrinthe *laby = createMaze(labyWidth, labyHeight, 1, 1);  // 1 entrée, 1 sortie
+    Labyrinthe *laby = creerLabyrinthe(labyWidth, labyHeight, 1, 1);  // 1 entrée, 1 sortie
 
     
     // Génération du labyrinthe
-    generateMaze(laby);
+    genererLabyrinthe(laby);
     
     // Calcul du chemin avec A*
     int pathLength = 0;
@@ -123,7 +123,7 @@ int main(void) {
         ClearBackground(RAYWHITE);
         
         // Dessiner le labyrinthe
-        drawMaze(laby, CELL_SIZE);
+        dessinerLabyrinthe(laby, CELL_SIZE);
         
         // Dessiner les ballons
         for (int i = 0; i < balloonCount; i++) {
@@ -174,7 +174,7 @@ int main(void) {
         free(path);
     }
     
-    freeMaze(laby);
+    freeLabyrinthe(laby);
     
     // Fermeture de la fenêtre
     CloseWindow();

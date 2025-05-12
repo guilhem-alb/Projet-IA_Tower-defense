@@ -32,10 +32,10 @@ typedef struct {
 } Labyrinthe;
 
 // Prototypes des fonctions
-Labyrinthe* createMaze(int width, int height, int numEntries, int numExits);
-void generateMaze(Labyrinthe *maze);
-void freeMaze(Labyrinthe *maze);
-bool isValid(Labyrinthe *maze, int x, int y);
-void drawMaze(Labyrinthe *maze, int tailleCase);
+Labyrinthe* creerLabyrinthe(int largeur, int hauteur, int numEntrees, int numSorties);
+void genererLabyrinthe(Labyrinthe *laby);
+void freeLabyrinthe(Labyrinthe *laby);
+bool positionValide(Labyrinthe *laby, int x, int y);
+void dessinerLabyrinthe(Labyrinthe *laby, int tailleCase);
 
 #endif // MAZE_H
