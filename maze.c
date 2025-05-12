@@ -36,24 +36,24 @@ const int DX[4] = {0, 1, 0, -1};  // NORTH, EAST, SOUTH, WEST
 const int DY[4] = {-1, 0, 1, 0};
 
 // Ajout d'une fonction pour mélanger un tableau
-void shuffleArray(int *array, int size) {
-    for (int i = size - 1; i > 0; i--) {
+void melangerTableau(int *tableau, int taille) {
+    for (int i = taille - 1; i > 0; i--) {
         int j = rand() % (i + 1);
-        int temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+        int tmp = tableau[i];
+        tableau[i] = tableau[j];
+        tableau[j] = tmp;
     }
 }
 
 // Implémentation récursive de l'algorithme de creusement du labyrinthe
-void carvePath(Labyrinthe *laby, int x, int y) {
+void creerChemin(Labyrinthe *laby, int x, int y) {
     // Marquer la cellule comme visitée et comme chemin
     laby->grille[y][x].visite = true;
     laby->grille[y][x].type = CHEMIN;
     
     // Tableau d'indices de directions
     int directions[4] = {0, 1, 2, 3}; // NORTH, EAST, SOUTH, WEST
-    shuffleArray(directions, 4);
+    melangerTableau(directions, 4);
     
     // Explorer dans toutes les directions
     for (int i = 0; i < 4; i++) {
@@ -67,7 +67,7 @@ void carvePath(Labyrinthe *laby, int x, int y) {
             laby->grille[y + DY[dir]][x + DX[dir]].type = CHEMIN;
             
             // Continuer depuis la nouvelle cellule
-            carvePath(laby, nx, ny);
+            creerChemin(laby, nx, ny);
         }
     }
 }
@@ -86,7 +86,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
     if (startY >= laby->hauteur) startY = laby->hauteur - 2;
     
     // Générer le labyrinthe à partir du point de départ
-    carvePath(laby, startX, startY);
+    creerChemin(laby, startX, startY);
     
     // Placer les entrées aux bords du labyrinthe
     for (int i = 0; i < laby->numEntrees; i++) {
