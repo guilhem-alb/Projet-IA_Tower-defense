@@ -173,8 +173,8 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
             
             // Marquer les cellules du chemin
             for (int i = 0; i < count; i++) {
-                if (maze->grid[path[1][i]][path[0][i]].type == CHEMIN) {
-                    maze->grid[path[1][i]][path[0][i]].inPath = true;
+                if (maze->grille[path[1][i]][path[0][i]].type == CHEMIN) {
+                    maze->grille[path[1][i]][path[0][i]].dansChemin = true;
                 }
             }
             
@@ -197,7 +197,7 @@ int** aStarSearch(Labyrinthe *maze, int startX, int startY, int goalX, int goalY
             if (!isValid(maze, nx, ny)) continue;
             
             // Vérifier si c'est un mur
-            if (maze->grid[ny][nx].type == MUR) continue;
+            if (maze->grille[ny][nx].type == MUR) continue;
             
             // Vérifier si le nœud est déjà dans la liste fermée
             if (isInNodeList(closedList, nx, ny)) continue;
