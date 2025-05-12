@@ -11,9 +11,10 @@
 #define SCREEN_HEIGHT 800
 #define CELL_SIZE 40
 
-#define MAX_BALLONS 100
+#define MAX_BALLONS 2
 #define MAX_TOWERS 50
 #define MAX_PROJECTILES 200
+#define MAX_VAGUES 3
 
 int main(void) {
     // Initialisation de la fenêtre
@@ -26,7 +27,6 @@ int main(void) {
     
     // Création du labyrinthe
     Labyrinthe *laby = creerLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
-
     
     // Génération du labyrinthe
     genererLabyrinthe(laby);
@@ -36,7 +36,6 @@ int main(void) {
     int **path = recherche_astar(laby, laby->entreeX[0], laby->entreeY[0], 
                              laby->sortieX[0], laby->sortieY[0], &pathLength);
     
-
     // Création des ballons
     Ballon *ballons[MAX_BALLONS];
     int ballonCount = 0;
@@ -50,17 +49,55 @@ int main(void) {
     Projectile *projectiles[MAX_PROJECTILES];
     int projectileCount = 0;
     
+    int vaguesCount = 0;
+    bool waveCompleted = false;
+    
     // Boucle principale
     while (!WindowShouldClose()) {
         // Mise à jour
         frameCounter++;
-        
-        // Créer un nouveau ballon toutes les 15 frames
-        if (frameCounter >= 15 && ballonCount < MAX_BALLONS) {
+
+        // Vérifier si tous les ballons ont été créés pour cette vague
+        if (ballonCount >= MAX_BALLONS && !waveCompleted) {
+            // Vérifier combien de ballons sont encore actifs
+            int activeBalloonsCount = 0;
+            for (int i = 0; i < ballonCount; i++) {
+                if (ballons[i] != NULL && ballons[i]->actif) {
+                    activeBalloonsCount++;
+                }
+            }
+            
+            // Si tous les ballons sont inactifs, la vague est terminée
+            if (activeBalloonsCount == 0) {
+                waveCompleted = true;
+                printf("Vague %d terminée!\n", vaguesCount + 1);
+            }
+        }
+
+        // Si la vague est terminée et qu'on n'a pas atteint le nombre maximum de vagues
+        if (waveCompleted && vaguesCount < MAX_VAGUES - 1) {
+            // Libérer la mémoire des ballons
+            for (int i = 0; i < ballonCount; i++) {
+                if (ballons[i] != NULL) {
+                    freeBallon(ballons[i]);
+                    ballons[i] = NULL;
+                }
+            }
+            
+            ballonCount = 0;     // Réinitialiser le compteur de ballons
+            vaguesCount++;       // Incrémenter le compteur de vagues
+            waveCompleted = false; // Réinitialiser l'état de la vague
+            
+            printf("Nouvelle vague %d commence...\n", vaguesCount + 1);
+        }
+
+        // Créer un nouveau ballon toutes les 15 frames (si la vague n'est pas terminée)
+        if (frameCounter >= 15 && ballonCount < MAX_BALLONS && !waveCompleted && vaguesCount < MAX_VAGUES) {
             ballons[ballonCount] = createBallon(laby->entreeX[0], laby->entreeY[0], 
-                                                 path[0], path[1], pathLength, 0.07f);
+                                               path[0], path[1], pathLength, 0.07f);
             if (ballons[ballonCount] != NULL) {
                 ballonCount++;
+                printf("Ballon %d créé pour la vague %d\n", ballonCount, vaguesCount + 1);
             }
             frameCounter = 0;
         }
@@ -145,7 +182,17 @@ int main(void) {
                 drawProjectile(projectiles[i], CELL_SIZE);
             }
         }
-                
+        
+        // Afficher des informations sur la vague actuelle
+        char waveText[50];
+        sprintf(waveText, "Vague: %d/%d", vaguesCount + 1, MAX_VAGUES);
+        DrawText(waveText, 10, 10, 20, BLACK);
+        
+        // Afficher un message si toutes les vagues sont terminées
+        if (vaguesCount >= MAX_VAGUES - 1 && waveCompleted) {
+            DrawText("Toutes les vagues sont terminées!", SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2, 30, RED);
+        }
+        
         EndDrawing();
     }
     
