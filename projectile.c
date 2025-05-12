@@ -5,15 +5,15 @@
 #include "raylib.h"
 
 // Création d'un projectile
-Projectile* createProjectile(float x, float y, Balloon *target, float speed) {
+Projectile* createProjectile(float x, float y, Balloon *cible, float speed) {
     Projectile *projectile = (Projectile*) malloc(sizeof(Projectile));
 
     
     projectile->x = x;
     projectile->y = y;
-    projectile->target = target;
-    projectile->targetX = target->x;
-    projectile->targetY = target->y;
+    projectile->cible = cible;
+    projectile->cibleX = cible->x;
+    projectile->cibleY = cible->y;
     projectile->speed = speed;
     projectile->active = true;
     
@@ -31,20 +31,20 @@ void updateProjectile(Projectile *projectile) {
     if (!projectile->active) return;
     
     // Si la cible n'est plus active, désactiver le projectile
-    if (projectile->target != NULL && !projectile->target->active) {
+    if (projectile->cible != NULL && !projectile->cible->active) {
         projectile->active = false;
         return;
     }
     
     // Mise à jour de la position cible si elle est encore active
-    if (projectile->target != NULL && projectile->target->active) {
-        projectile->targetX = projectile->target->x;
-        projectile->targetY = projectile->target->y;
+    if (projectile->cible != NULL && projectile->cible->active) {
+        projectile->cibleX = projectile->cible->x;
+        projectile->cibleY = projectile->cible->y;
     }
     
     // Calculer la direction vers la cible
-    float dx = projectile->targetX - projectile->x;
-    float dy = projectile->targetY - projectile->y;
+    float dx = projectile->cibleX - projectile->x;
+    float dy = projectile->cibleY - projectile->y;
     
     // Normaliser la direction
     float length = sqrt(dx * dx + dy * dy);
@@ -58,14 +58,14 @@ void updateProjectile(Projectile *projectile) {
     projectile->y += dy * projectile->speed;
     
     // Vérifier si on a atteint la cible
-    float distanceSquared = (projectile->x - projectile->targetX) * (projectile->x - projectile->targetX) +
-                           (projectile->y - projectile->targetY) * (projectile->y - projectile->targetY);
+    float distanceSquared = (projectile->x - projectile->cibleX) * (projectile->x - projectile->cibleX) +
+                           (projectile->y - projectile->cibleY) * (projectile->y - projectile->cibleY);
     
     if (distanceSquared < 0.1f) {
         // Désactiver le projectile et la cible
         projectile->active = false;
-        if (projectile->target != NULL) {
-            projectile->target->active = false;
+        if (projectile->cible != NULL) {
+            projectile->cible->active = false;
         }
     }
 }
