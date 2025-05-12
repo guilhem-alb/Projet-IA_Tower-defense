@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "raylib.h"
 #include "maze.h"
 #include "astar.h"
@@ -17,16 +18,17 @@
 #define MAX_VAGUES 3
 
 int main(void) {
+    // Initialiser le générateur de nombres aléatoires
+    srand(time(NULL));
     // Initialisation de la fenêtre
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ballon laby Defense");
     SetTargetFPS(60);
-    
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
     int labyWidth = SCREEN_WIDTH / CELL_SIZE;
     int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
     
     // Création du labyrinthe
-    Labyrinthe *laby = creerLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
+    Labyrinthe *laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
     
     // Génération du labyrinthe
     genererLabyrinthe(laby);

@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include "maze.h"
+#include "listeCases.h"
 #include "raylib.h"
 
+
 // Création d'un labyrinthe vide
-Labyrinthe* creerLabyrinthe(int largeur, int hauteur, int numEntrees, int numSorties) {
+Labyrinthe* initialiserLabyrinthe(int largeur, int hauteur, int numEntrees, int numSorties) {
     Labyrinthe *laby = (Labyrinthe*) malloc(sizeof(Labyrinthe));
 
     
@@ -19,9 +20,24 @@ Labyrinthe* creerLabyrinthe(int largeur, int hauteur, int numEntrees, int numSor
     laby->grille = (Case**) malloc(hauteur * sizeof(Case*));
 
     
-    for (int i = 0; i < hauteur; i++) 
-        laby->grille[i] = (Case*) calloc(largeur, sizeof(Case)); // initialise les cellules avec tous leurs attributs à 0
-    
+    for (int i = 0; i < hauteur; i++) {
+        laby->grille[i] = (Case*) malloc(largeur * sizeof(Case)); 
+        // initialise les cellules
+        for(int j = 0; j < largeur; j++) {
+            laby->grille[i][j].xCoord = i;
+            laby->grille[i][j].yCoord = j;
+            laby->grille[i][j].visite = false;
+            laby->grille[i][j].ajoute = false;
+            laby->grille[i][j].dansChemin = false;
+            // génération de "quadrillage" pour l'algo de Prim
+            if((i % 2 == 1) && (j % 2 == 1)) {
+                laby->grille[i][j].type = CHEMIN;
+            }
+            else {
+                laby->grille[i][j].type = MUR;
+            }
+        }
+    }
     // Allocation des tableaux d'entrées et sorties
     laby->entreeX = (int*) malloc(numEntrees * sizeof(int));
     laby->entreeY = (int*) malloc(numEntrees * sizeof(int));
@@ -31,63 +47,59 @@ Labyrinthe* creerLabyrinthe(int largeur, int hauteur, int numEntrees, int numSor
     return laby;
 }
 
-// directions pour la génération du labyrinthe
-const int DX[4] = {0, 1, 0, -1};  // NORTH, EAST, SOUTH, WEST
-const int DY[4] = {-1, 0, 1, 0};
-
-// Ajout d'une fonction pour mélanger un tableau
-void melangerTableau(int *tableau, int taille) {
-    for (int i = taille - 1; i > 0; i--) {
-        int j = rand() % (i + 1);
-        int tmp = tableau[i];
-        tableau[i] = tableau[j];
-        tableau[j] = tmp;
+// fonction auxiliaire à Prim pour ajouter les voisins à la liste
+void traiterVoisins(Labyrinthe *laby, Case C, listeCases *L) {
+    int x = C.xCoord, y = C.yCoord;
+    int coordVoisins[4] = {(x - 2), (y - 2), (x + 2), (y + 2)}; // Toutes les cases voisines (à deux cases de distance)
+    listeCases casesVisitees = creerListeCases();
+    Case *currCase, caseAConnecter;
+    // On sépare les voisins entre ceux faisant partie du labyrinthe et les autres
+    for(int i = 0; i < 4; i++) {
+        if ((coordVoisins[i] >= 0) && (coordVoisins[i] < ((i % 2 == 0) ? laby->hauteur : laby->largeur))) { // s'assure que le voisin est dans les bornes du tableau
+            currCase = ((i % 2 == 0) ? &laby->grille[coordVoisins[i]][y] : &laby->grille[x][coordVoisins[i]]);
+            // si la case ne fait pas encore partie du labyrinthe, on l'ajoute aux cases à traiter
+            if(!currCase->visite && !currCase->ajoute) {
+                ajouterCase(L, *currCase);
+                currCase->ajoute = true;
+            }
+            // sinon on l'ajoute aux potentielles cases à connecter
+            else if(currCase->visite)
+                ajouterCase(&casesVisitees, *currCase);
+        }
     }
+    if(!listeCasesVide(casesVisitees)) {
+        // On le connecte à une voisine faisant partie du labyrinthe au hasard
+        caseAConnecter = prendreAuHasard(&casesVisitees);
+        laby->grille[(x + caseAConnecter.xCoord) / 2][(y + caseAConnecter.yCoord) / 2].type = CHEMIN;
+        laby->grille[x][y].visite = true;
+    }
+    // TODO free list
 }
 
-// Implémentation récursive de l'algorithme de creusement du labyrinthe
-void creerChemin(Labyrinthe *laby, int x, int y) {
-    // Marquer la cellule comme visitée et comme chemin
-    laby->grille[y][x].visite = true;
-    laby->grille[y][x].type = CHEMIN;
-    
-    // Tableau d'indices de directions
-    int directions[4] = {0, 1, 2, 3}; // NORTH, EAST, SOUTH, WEST
-    melangerTableau(directions, 4);
-    
-    // Explorer dans toutes les directions
-    for (int i = 0; i < 4; i++) {
-        int dir = directions[i];
-        int nx = x + DX[dir] * 2; // Sauter une cellule pour laisser de l'espace entre les chemins
-        int ny = y + DY[dir] * 2;
+// génère un labyrinthe en utilisant l'algorithme de Prim
+void prim(Labyrinthe *laby) {
+    listeCases casesATraiter = creerListeCases();
+    Case currCase; 
+    // Sélection d'une case du quadrillage aléatoire
+    int x = rand() % (laby->hauteur / 2) * 2 + 1;
+    int y = rand() % (laby->largeur / 2) * 2 + 1;
+    laby->grille[x][y].visite = true;
+    ajouterCase(&casesATraiter, laby->grille[x][y]);
+    while(!listeCasesVide(casesATraiter)) {
         
-        // Vérifier si la nouvelle position est valide et non visitée
-        if (positionValide(laby, nx, ny) && !laby->grille[ny][nx].visite) {
-            // Creuser un passage entre la cellule actuelle et la nouvelle cellule
-            laby->grille[y + DY[dir]][x + DX[dir]].type = CHEMIN;
-            
-            // Continuer depuis la nouvelle cellule
-            creerChemin(laby, nx, ny);
-        }
+        currCase = prendreAuHasard(&casesATraiter);
+        x = currCase.xCoord;
+        y = currCase.yCoord;
+        
+        traiterVoisins(laby, currCase, &casesATraiter);
+        
     }
 }
 
 // Fonction principale de génération du labyrinthe
 void genererLabyrinthe(Labyrinthe *laby) {
-    // Initialiser le générateur de nombres aléatoires
-    srand(time(NULL));
-    
-    // Choisir un point de départ aléatoire (doit être impair pour laisser des murs)
-    int startX = 1 + 2 * (rand() % ((laby->largeur - 1) / 2));
-    int startY = 1 + 2 * (rand() % ((laby->hauteur - 1) / 2));
-    
-    // S'assurer que le point de départ est dans les limites
-    if (startX >= laby->largeur) startX = laby->largeur - 2;
-    if (startY >= laby->hauteur) startY = laby->hauteur - 2;
-    
     // Générer le labyrinthe à partir du point de départ
-    creerChemin(laby, startX, startY);
-    
+    prim(laby);
     // Placer les entrées aux bords du labyrinthe
     for (int i = 0; i < laby->numEntrees; i++) {
         int entrySide, x, y, adjX, adjY;
@@ -177,7 +189,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
             // Marquer la sortie
             laby->grille[exitY][exitX].type = SORTIE;
             laby->sortieX[j] = exitX;
-            laby->sortieY[j] = exitY;
+            laby->sortieY[j] = exitY;   
         }
     }
 }

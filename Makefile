@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
+CFLAGS = -Wall -Wextra -std=c99 -g
 LIBS = -lraylib -lGL -lm -lpthread -ldl
-SRCS = main.c maze.c astar.c ballon.c tower.c projectile.c
+SRCS = main.c maze.c astar.c ballon.c tower.c projectile.c listeCases.c
 OBJS = $(SRCS:.c=.o)
 EXEC = balloon_maze_defense
 

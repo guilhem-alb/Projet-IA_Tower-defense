@@ -14,7 +14,10 @@ typedef enum {
 // Structure représentant une cellule du labyrinthe
 typedef struct {
     Typecase type;
-    bool visite;      // Pour l'algorithme de génération du labyrinthe
+    int xCoord;        
+    int yCoord;         
+    bool visite;      // sert à savoir si la case fait partie du labyrinthe dans prim
+    bool ajoute;       // pour ne pas traiter une case deux fois dans prim
     bool dansChemin;       // Pour marquer les cellules faisant partie du chemin calculé
 } Case;
 
@@ -31,8 +34,9 @@ typedef struct {
     int *sortieY;        // Coordonnées Y des sorties
 } Labyrinthe;
 
+
 // Prototypes des fonctions
-Labyrinthe* creerLabyrinthe(int largeur, int hauteur, int numEntrees, int numSorties);
+Labyrinthe* initialiserLabyrinthe(int largeur, int hauteur, int numEntrees, int numSorties);
 void genererLabyrinthe(Labyrinthe *laby);
 void freeLabyrinthe(Labyrinthe *laby);
 bool positionValide(Labyrinthe *laby, int x, int y);
