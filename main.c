@@ -3,21 +3,21 @@
 #include "raylib.h"
 #include "maze.h"
 #include "astar.h"
-#include "balloon.h"
+#include "ballon.h"
 #include "tower.h"
 #include "projectile.h"
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1000
+#define SCREEN_HEIGHT 800
 #define CELL_SIZE 40
 
-#define MAX_BALLOONS 100
+#define MAX_BALLONS 100
 #define MAX_TOWERS 50
 #define MAX_PROJECTILES 200
 
 int main(void) {
     // Initialisation de la fenêtre
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Balloon laby Defense");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ballon laby Defense");
     SetTargetFPS(60);
     
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
@@ -25,7 +25,7 @@ int main(void) {
     int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
     
     // Création du labyrinthe
-    Labyrinthe *laby = creerLabyrinthe(labyWidth, labyHeight, 1, 1);  // 1 entrée, 1 sortie
+    Labyrinthe *laby = creerLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
 
     
     // Génération du labyrinthe
@@ -38,8 +38,8 @@ int main(void) {
     
 
     // Création des ballons
-    Balloon *balloons[MAX_BALLOONS];
-    int balloonCount = 0;
+    Ballon *ballons[MAX_BALLONS];
+    int ballonCount = 0;
     int frameCounter = 0;
     
     // Création des tours
@@ -56,26 +56,26 @@ int main(void) {
         frameCounter++;
         
         // Créer un nouveau ballon toutes les 15 frames
-        if (frameCounter >= 15 && balloonCount < MAX_BALLOONS) {
-            balloons[balloonCount] = createBalloon(laby->entreeX[0], laby->entreeY[0], 
+        if (frameCounter >= 15 && ballonCount < MAX_BALLONS) {
+            ballons[ballonCount] = createBallon(laby->entreeX[0], laby->entreeY[0], 
                                                  path[0], path[1], pathLength, 0.07f);
-            if (balloons[balloonCount] != NULL) {
-                balloonCount++;
+            if (ballons[ballonCount] != NULL) {
+                ballonCount++;
             }
             frameCounter = 0;
         }
         
         // Mise à jour de tous les ballons
-        for (int i = 0; i < balloonCount; i++) {
-            if (balloons[i] != NULL && balloons[i]->active) {
-                updateBalloon(balloons[i]);
+        for (int i = 0; i < ballonCount; i++) {
+            if (ballons[i] != NULL && ballons[i]->actif) {
+                updateBallon(ballons[i]);
             }
         }
         
         // Mise à jour de toutes les tours et création de projectiles
         for (int i = 0; i < towerCount; i++) {
-            if (towers[i] != NULL && towers[i]->active) {
-                Projectile *newProjectile = updateTower(towers[i], balloons, balloonCount);
+            if (towers[i] != NULL && towers[i]->actif) {
+                Projectile *newProjectile = updateTower(towers[i], ballons, ballonCount);
                 if (newProjectile != NULL && projectileCount < MAX_PROJECTILES) {
                     projectiles[projectileCount++] = newProjectile;
                 }
@@ -84,14 +84,14 @@ int main(void) {
         
         // Mise à jour de tous les projectiles
         for (int i = 0; i < projectileCount; i++) {
-            if (projectiles[i] != NULL && projectiles[i]->active) {
+            if (projectiles[i] != NULL && projectiles[i]->actif) {
                 updateProjectile(projectiles[i]);
             }
         }
         
         // Nettoyage des projectiles inactifs
         for (int i = 0; i < projectileCount; i++) {
-            if (projectiles[i] != NULL && !projectiles[i]->active) {
+            if (projectiles[i] != NULL && !projectiles[i]->actif) {
                 freeProjectile(projectiles[i]);
                 projectiles[i] = NULL;
                 
@@ -126,22 +126,22 @@ int main(void) {
         dessinerLabyrinthe(laby, CELL_SIZE);
         
         // Dessiner les ballons
-        for (int i = 0; i < balloonCount; i++) {
-            if (balloons[i] != NULL && balloons[i]->active) {
-                drawBalloon(balloons[i], CELL_SIZE);
+        for (int i = 0; i < ballonCount; i++) {
+            if (ballons[i] != NULL && ballons[i]->actif) {
+                drawBallon(ballons[i], CELL_SIZE);
             }
         }
         
         // Dessiner les tours
         for (int i = 0; i < towerCount; i++) {
-            if (towers[i] != NULL && towers[i]->active) {
+            if (towers[i] != NULL && towers[i]->actif) {
                 drawTower(towers[i], CELL_SIZE);
             }
         }
         
         // Dessiner les projectiles
         for (int i = 0; i < projectileCount; i++) {
-            if (projectiles[i] != NULL && projectiles[i]->active) {
+            if (projectiles[i] != NULL && projectiles[i]->actif) {
                 drawProjectile(projectiles[i], CELL_SIZE);
             }
         }
@@ -150,9 +150,9 @@ int main(void) {
     }
     
     // Libération de la mémoire
-    for (int i = 0; i < balloonCount; i++) {
-        if (balloons[i] != NULL) {
-            freeBalloon(balloons[i]);
+    for (int i = 0; i < ballonCount; i++) {
+        if (ballons[i] != NULL) {
+            freeBallon(ballons[i]);
         }
     }
     
