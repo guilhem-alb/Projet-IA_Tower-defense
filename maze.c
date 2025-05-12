@@ -19,10 +19,8 @@ Labyrinthe* createMaze(int width, int height, int numEntries, int numExits) {
     maze->grid = (Case**) malloc(height * sizeof(Case*));
 
     
-    for (int i = 0; i < height; i++) {
+    for (int i = 0; i < height; i++) 
         maze->grid[i] = (Case*) calloc(width, sizeof(Case)); // initialise les cellules avec tous leurs attributs à 0
-        
-    }
     
     // Allocation des tableaux d'entrées et sorties
     maze->entryX = (int*) malloc(numEntries * sizeof(int));
@@ -77,7 +75,7 @@ void shuffleArray(int *array, int size) {
 void carvePath(Labyrinthe *maze, int x, int y) {
     // Marquer la cellule comme visitée et comme chemin
     maze->grid[y][x].visited = true;
-    maze->grid[y][x].type = PATH;
+    maze->grid[y][x].type = CHEMIN;
     
     // Tableau d'indices de directions
     int directions[4] = {0, 1, 2, 3}; // NORTH, EAST, SOUTH, WEST
@@ -92,7 +90,7 @@ void carvePath(Labyrinthe *maze, int x, int y) {
         // Vérifier si la nouvelle position est valide et non visitée
         if (isValid(maze, nx, ny) && !maze->grid[ny][nx].visited) {
             // Creuser un passage entre la cellule actuelle et la nouvelle cellule
-            maze->grid[y + DY[dir]][x + DX[dir]].type = PATH;
+            maze->grid[y + DY[dir]][x + DX[dir]].type = CHEMIN;
             
             // Continuer depuis la nouvelle cellule
             carvePath(maze, nx, ny);
@@ -151,13 +149,13 @@ void generateMaze(Labyrinthe *maze) {
             adjX = x + (entrySide == 3 ? 1 : (entrySide == 1 ? -1 : 0));
             adjY = y + (entrySide == 0 ? 1 : (entrySide == 2 ? -1 : 0));
             
-            if (isValid(maze, adjX, adjY) && maze->grid[adjY][adjX].type == PATH) {
+            if (isValid(maze, adjX, adjY) && maze->grid[adjY][adjX].type == CHEMIN) {
                 validEntry = true;
             }
         } while (!validEntry);
         
         // Marquer l'entrée
-        maze->grid[y][x].type = ENTRY;
+        maze->grid[y][x].type = ENTREE;
         maze->entryX[i] = x;
         maze->entryY[i] = y;
         
@@ -197,13 +195,13 @@ void generateMaze(Labyrinthe *maze) {
                 adjExitX = exitX + (exitSide == 3 ? 1 : (exitSide == 1 ? -1 : 0));
                 adjExitY = exitY + (exitSide == 0 ? 1 : (exitSide == 2 ? -1 : 0));
                 
-                if (isValid(maze, adjExitX, adjExitY) && maze->grid[adjExitY][adjExitX].type == PATH) {
+                if (isValid(maze, adjExitX, adjExitY) && maze->grid[adjExitY][adjExitX].type == CHEMIN) {
                     validExit = true;
                 }
             } while (!validExit);
             
             // Marquer la sortie
-            maze->grid[exitY][exitX].type = EXIT;
+            maze->grid[exitY][exitX].type = SORTIE;
             maze->exitX[j] = exitX;
             maze->exitY[j] = exitY;
         }
@@ -217,20 +215,20 @@ void drawMaze(Labyrinthe *maze, int tailleCase) {
             Rectangle rect = {x * tailleCase, y * tailleCase, tailleCase, tailleCase};
             
             switch (maze->grid[y][x].type) {
-                case WALL:
+                case MUR:
                     DrawRectangleRec(rect, DARKGRAY);
                     break;
-                case PATH:
+                case CHEMIN:
                     if (maze->grid[y][x].inPath) {
                         DrawRectangleRec(rect, LIGHTGRAY);
                     } else {
                         DrawRectangleRec(rect, WHITE);
                     }
                     break;
-                case ENTRY:
+                case ENTREE:
                     DrawRectangleRec(rect, GREEN);
                     break;
-                case EXIT:
+                case SORTIE:
                     DrawRectangleRec(rect, RED);
                     break;
             }

@@ -5,10 +5,10 @@
 
 // Type de cellule dans le labyrinthe
 typedef enum {
-    WALL,       // Mur
-    PATH,       // Chemin
-    ENTRY,      // Entrée
-    EXIT        // Sortie
+    MUR,       // Mur
+    CHEMIN,       // Chemin
+    ENTREE,      // Entrée
+    SORTIE        // Sortie
 } CaseType;
 
 // Structure représentant une cellule du labyrinthe
