@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include "maze.h"
-#include "balloon.h"
+#include "ballon.h"
 #include "projectile.h"
 
 // Structure pour les tours
@@ -13,13 +13,13 @@ typedef struct {
     int range;          // Portée en nombre de cellules
     float reloadTime;   // Temps entre les tirs en secondes
     float reloadCounter;// Compteur pour le rechargement
-    bool active;        // Si la tour est active
+    bool actif;        // Si la tour est active
 } Tower;
 
 // Prototypes des fonctions
 Tower* createTower(int x, int y, int range, float reloadTime);
 void freeTower(Tower *tower);
-Projectile* updateTower(Tower *tower, Balloon **balloons, int balloonCount);
+Projectile* updateTower(Tower *tower, Ballon **ballons, int ballonCount);
 void drawTower(Tower *tower, int cellSize);
 bool canPlaceTower(Labyrinthe *maze, int x, int y);
 

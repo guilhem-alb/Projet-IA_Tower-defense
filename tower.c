@@ -15,7 +15,7 @@ Tower* createTower(int x, int y, int range, float reloadTime) {
     tower->range = range;
     tower->reloadTime = reloadTime;
     tower->reloadCounter = 0;
-    tower->active = true;
+    tower->actif = true;
     
     return tower;
 }
@@ -26,42 +26,42 @@ void freeTower(Tower *tower) {
     free(tower);
 }
 
-// Mise à jour de la tour et tir sur les ballons
-Projectile* updateTower(Tower *tower, Balloon **balloons, int balloonCount) {
-    if (!tower->active) return NULL;
+// Mise à jour de la tour et tir sur les ballns
+Projectile* updateTower(Tower *tower, Ballon **ballons, int ballonCount) {
+    if (!tower->actif) return NULL;
     
     // Diminuer le compteur de rechargement
     if (tower->reloadCounter > 0) {
         tower->reloadCounter -= GetFrameTime();
     }
     
-    // Si prêt à tirer, trouver le ballon le plus proche dans la portée
+    // Si prêt à tirer, trouver le balln le plus proche dans la portée
     if (tower->reloadCounter <= 0) {
-        Balloon *targetBalloon = NULL;
+        Ballon *targetBallon = NULL;
         float minDistance = (float)(tower->range * tower->range);
         
-        for (int i = 0; i < balloonCount; i++) {
-            if (balloons[i] != NULL && balloons[i]->active) {
-                // Calculer la distance au ballon
-                float dx = tower->x - balloons[i]->x;
-                float dy = tower->y - balloons[i]->y;
+        for (int i = 0; i < ballonCount; i++) {
+            if (ballons[i] != NULL && ballons[i]->actif) {
+                // Calculer la distance au balln
+                float dx = tower->x - ballons[i]->x;
+                float dy = tower->y - ballons[i]->y;
                 float distSquared = dx * dx + dy * dy;
                 
                 // Vérifier si dans la portée et plus proche que la cible actuelle
                 if (distSquared <= minDistance) {
                     minDistance = distSquared;
-                    targetBalloon = balloons[i];
+                    targetBallon = ballons[i];
                 }
             }
         }
         
         // Si trouvé une cible, créer un projectile
-        if (targetBalloon != NULL) {
+        if (targetBallon != NULL) {
             // Réinitialiser le compteur de rechargement
             tower->reloadCounter = tower->reloadTime;
             
             // Créer et retourner un nouveau projectile
-            return createProjectile((float)tower->x, (float)tower->y, targetBalloon, 0.2f);
+            return createProjectile((float)tower->x, (float)tower->y, targetBallon, 0.2f);
         }
     }
     
@@ -70,7 +70,7 @@ Projectile* updateTower(Tower *tower, Balloon **balloons, int balloonCount) {
 
 // Dessin de la tour
 void drawTower(Tower *tower, int cellSize) {
-    if (!tower->active) return;
+    if (!tower->actif) return;
     
     // Calculer les coordonnées à l'écran
     float screenX = tower->x * cellSize + cellSize / 2;

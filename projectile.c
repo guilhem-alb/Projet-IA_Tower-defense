@@ -5,7 +5,7 @@
 #include "raylib.h"
 
 // Création d'un projectile
-Projectile* createProjectile(float x, float y, Balloon *cible, float speed) {
+Projectile* createProjectile(float x, float y, Ballon *cible, float vitesse) {
     Projectile *projectile = (Projectile*) malloc(sizeof(Projectile));
 
     
@@ -14,8 +14,8 @@ Projectile* createProjectile(float x, float y, Balloon *cible, float speed) {
     projectile->cible = cible;
     projectile->cibleX = cible->x;
     projectile->cibleY = cible->y;
-    projectile->speed = speed;
-    projectile->active = true;
+    projectile->vitesse = vitesse;
+    projectile->actif = true;
     
     return projectile;
 }
@@ -28,16 +28,16 @@ void freeProjectile(Projectile *projectile) {
 
 // Mise à jour d'un projectile
 void updateProjectile(Projectile *projectile) {
-    if (!projectile->active) return;
+    if (!projectile->actif) return;
     
-    // Si la cible n'est plus active, désactiver le projectile
-    if (projectile->cible != NULL && !projectile->cible->active) {
-        projectile->active = false;
+    // Si la cible n'est plus actif, désactifr le projectile
+    if (projectile->cible != NULL && !projectile->cible->actif) {
+        projectile->actif = false;
         return;
     }
     
-    // Mise à jour de la position cible si elle est encore active
-    if (projectile->cible != NULL && projectile->cible->active) {
+    // Mise à jour de la position cible si elle est encore actif
+    if (projectile->cible != NULL && projectile->cible->actif) {
         projectile->cibleX = projectile->cible->x;
         projectile->cibleY = projectile->cible->y;
     }
@@ -54,25 +54,25 @@ void updateProjectile(Projectile *projectile) {
     }
     
     // Déplacer le projectile
-    projectile->x += dx * projectile->speed;
-    projectile->y += dy * projectile->speed;
+    projectile->x += dx * projectile->vitesse;
+    projectile->y += dy * projectile->vitesse;
     
     // Vérifier si on a atteint la cible
     float distanceSquared = (projectile->x - projectile->cibleX) * (projectile->x - projectile->cibleX) +
                            (projectile->y - projectile->cibleY) * (projectile->y - projectile->cibleY);
     
     if (distanceSquared < 0.1f) {
-        // Désactiver le projectile et la cible
-        projectile->active = false;
+        // Désactifr le projectile et la cible
+        projectile->actif = false;
         if (projectile->cible != NULL) {
-            projectile->cible->active = false;
+            projectile->cible->actif = false;
         }
     }
 }
 
 // Dessin d'un projectile
 void drawProjectile(Projectile *projectile, int cellSize) {
-    if (!projectile->active) return;
+    if (!projectile->actif) return;
     
     // Calculer les coordonnées à l'écran
     float screenX = projectile->x * cellSize + cellSize / 2;
