@@ -161,8 +161,8 @@ int** recherche_astar(Labyrinthe *laby, int arrivX, int arrivY, int goalX, int g
             
             // Marquer les cellules du chemin
             for (int i = 0; i < count; i++) {
-                if (maze->grille[path[1][i]][path[0][i]].type == CHEMIN) {
-                    maze->grille[path[1][i]][path[0][i]].dansChemin = true;
+                if (laby->grille[path[1][i]][path[0][i]].type == CHEMIN) {
+                    laby->grille[path[1][i]][path[0][i]].dansChemin = true;
                 }
             }
             
@@ -185,7 +185,7 @@ int** recherche_astar(Labyrinthe *laby, int arrivX, int arrivY, int goalX, int g
             if (!isValid(laby, nx, ny)) continue;
             
             // Vérifier si c'est un mur
-            if (maze->grid[ny][nx].type == WALL) continue;
+            if (laby->grille[ny][nx].type == MUR) continue;
             
             // Vérifier si le nœud est déjà dans la liste fermée
             if (existeNode(closedList, nx, ny)) continue;

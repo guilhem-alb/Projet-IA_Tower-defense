@@ -33,8 +33,8 @@ int main(void) {
     
     // Calcul du chemin avec A*
     int pathLength = 0;
-    int **path = aStarSearch(maze, maze->entreeX[0], maze->entreeY[0], 
-                             maze->sortieX[0], maze->sortieY[0], &pathLength);
+    int **path = recherche_astar(laby, laby->entreeX[0], laby->entreeY[0], 
+                             laby->sortieX[0], laby->sortieY[0], &pathLength);
     
 
     // Création des ballons
@@ -57,7 +57,7 @@ int main(void) {
         
         // Créer un nouveau ballon toutes les 15 frames
         if (frameCounter >= 15 && balloonCount < MAX_BALLOONS) {
-            balloons[balloonCount] = createBalloon(maze->entryX[0], maze->entryY[0], 
+            balloons[balloonCount] = createBalloon(laby->entreeX[0], laby->entreeY[0], 
                                                  path[0], path[1], pathLength, 0.07f);
             if (balloons[balloonCount] != NULL) {
                 balloonCount++;
