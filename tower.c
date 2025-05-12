@@ -93,7 +93,7 @@ bool canPlaceTower(Labyrinthe *maze, int x, int y) {
     if (!isValid(maze, x, y)) return false;
     
     // Vérifier si la cellule est un mur
-    if (maze->grid[y][x].type != WALL) return false;
+    if (maze->grille[y][x].type != MUR) return false;
     
     // Vérifier si au moins une cellule adjacente est un chemin
     // Cela garantit que les tours sont uniquement placées sur des murs adjacents aux chemins
@@ -104,7 +104,7 @@ bool canPlaceTower(Labyrinthe *maze, int x, int y) {
         int nx = x + dx[i];
         int ny = y + dy[i];
         
-        if (isValid(maze, nx, ny) && maze->grid[ny][nx].type == PATH) {
+        if (isValid(maze, nx, ny) && maze->grille[ny][nx].type == CHEMIN) {
             return true;
         }
     }

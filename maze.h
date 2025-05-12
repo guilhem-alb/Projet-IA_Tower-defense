@@ -5,30 +5,30 @@
 
 // Type de cellule dans le labyrinthe
 typedef enum {
-    WALL,       // Mur
-    PATH,       // Chemin
-    ENTRY,      // Entrée
-    EXIT        // Sortie
-} CaseType;
+    MUR,       // Mur
+    CHEMIN,       // Chemin
+    ENTREE,      // Entrée
+    SORTIE        // Sortie
+} Typecase;
 
 // Structure représentant une cellule du labyrinthe
 typedef struct {
-    CaseType type;
-    bool visited;      // Pour l'algorithme de génération du labyrinthe
-    bool inPath;       // Pour marquer les cellules faisant partie du chemin calculé
+    Typecase type;
+    bool visite;      // Pour l'algorithme de génération du labyrinthe
+    bool dansChemin;       // Pour marquer les cellules faisant partie du chemin calculé
 } Case;
 
 // Structure représentant le labyrinthe
 typedef struct {
-    int width;
-    int height;
-    Case **grid;       // Grille 2D de cellules
-    int numEntries;
-    int numExits;
-    int *entryX;       // Coordonnées X des entrées
-    int *entryY;       // Coordonnées Y des entrées
-    int *exitX;        // Coordonnées X des sorties
-    int *exitY;        // Coordonnées Y des sorties
+    int largeur;
+    int hauteur;
+    Case **grille;       // Grille 2D de cellules
+    int numEntrees;
+    int numSorties;
+    int *entreeX;       // Coordonnées X des entrées
+    int *entreeY;       // Coordonnées Y des entrées
+    int *sortieX;        // Coordonnées X des sorties
+    int *sortieY;        // Coordonnées Y des sorties
 } Labyrinthe;
 
 // Prototypes des fonctions
