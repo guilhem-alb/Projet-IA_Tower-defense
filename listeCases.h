@@ -21,6 +21,7 @@ listeCases creerListeCases(); // crée une liste vide
 void ajouterCase(listeCases *, Case); // ajoute la case dans la liste
 bool listeCasesVide(listeCases);    // teste si la liste est vide
 Case prendreAuHasard(listeCases *); // choisis une case au hasard est l'enlève de la liste
+void freeMaillon(maillon *);
 
 
 #endif

@@ -73,7 +73,7 @@ void traiterVoisins(Labyrinthe *laby, Case C, listeCases *L) {
         laby->grille[(x + caseAConnecter.xCoord) / 2][(y + caseAConnecter.yCoord) / 2].type = CHEMIN;
         laby->grille[x][y].visite = true;
     }
-    // TODO free list
+    freeMaillon(casesVisitees.liste);
 }
 
 // génère un labyrinthe en utilisant l'algorithme de Prim

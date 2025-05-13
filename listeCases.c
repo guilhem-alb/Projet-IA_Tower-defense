@@ -60,3 +60,10 @@ Case prendreAuHasard(listeCases *L) {
 
     return C;
 }
+
+void freeMaillon(maillon *liste) {
+    if(liste == NULL)
+        return; // ne rien faire
+    freeMaillon(liste->suiv);
+    free(liste);
+}
