@@ -17,6 +17,29 @@
 #define MAX_PROJECTILES 200
 #define MAX_VAGUES 3
 
+// Prototypes
+void resetGame();
+
+// Globals
+Labyrinthe *laby;
+int **path;
+int pathLength;
+
+Ballon     *ballons[MAX_BALLONS];
+int         ballonCount   = 0;
+int         frameCounter  = 0;
+
+Tower      *towers[MAX_TOWERS];
+int         towerCount    = 0;
+
+Projectile *projectiles[MAX_PROJECTILES];
+int         projectileCount = 0;
+
+int         vaguesCount   = 0;
+bool        waveCompleted = false;
+
+
+
 int main(void) {
     // Initialiser le générateur de nombres aléatoires
     srand(time(NULL));
@@ -28,31 +51,15 @@ int main(void) {
     int labyHeight = (SCREEN_HEIGHT / CELL_SIZE);
     
     // Création du labyrinthe
-    Labyrinthe *laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
+    laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
     
     // Génération du labyrinthe
     genererLabyrinthe(laby);
     
     // Calcul du chemin avec A*
-    int pathLength = 0;
-    int **path = recherche_astar(laby, laby->entreeX[0], laby->entreeY[0], 
+    pathLength = 0;
+    path = recherche_astar(laby, laby->entreeX[0], laby->entreeY[0], 
                              laby->sortieX[0], laby->sortieY[0], &pathLength);
-    
-    // Création des ballons
-    Ballon *ballons[MAX_BALLONS];
-    int ballonCount = 0;
-    int frameCounter = 0;
-    
-    // Création des tours
-    Tower *towers[MAX_TOWERS];
-    int towerCount = 0;
-    
-    // Création des projectiles
-    Projectile *projectiles[MAX_PROJECTILES];
-    int projectileCount = 0;
-    
-    int vaguesCount = 0;
-    bool waveCompleted = false;
     
     // Boucle principale
     while (!WindowShouldClose()) {
@@ -60,20 +67,22 @@ int main(void) {
         frameCounter++;
 
         // Vérifier si tous les ballons ont été créés pour cette vague
-        if (ballonCount >= MAX_BALLONS && !waveCompleted) {
+        if (!waveCompleted) {
             // Vérifier combien de ballons sont encore actifs
             int activeBalloonsCount = 0;
             for (int i = 0; i < ballonCount; i++) {
                 if (ballons[i] != NULL && ballons[i]->actif) {
                     activeBalloonsCount++;
                 }
-            }
-            
-            // Si tous les ballons sont inactifs, la vague est terminée
+
+                            // Si tous les ballons sont inactifs, la vague est terminée
             if (activeBalloonsCount == 0) {
                 waveCompleted = true;
                 printf("Vague %d terminée!\n", vaguesCount + 1);
             }
+            }
+            
+
         }
 
         // Si la vague est terminée et qu'on n'a pas atteint le nombre maximum de vagues
@@ -194,6 +203,26 @@ int main(void) {
         if (vaguesCount >= MAX_VAGUES - 1 && waveCompleted) {
             DrawText("Toutes les vagues sont terminées!", SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2, 30, RED);
         }
+
+        // Bouton Retry quand fini
+        if (vaguesCount >= MAX_VAGUES-1 && waveCompleted) {
+            DrawText("Toutes les vagues sont terminées!",
+                     SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2, 30, RED);
+
+            Rectangle btn = {
+                SCREEN_WIDTH/2 - 60,
+                SCREEN_HEIGHT/2 + 40,
+                120, 40
+            };
+            bool hover = CheckCollisionPointRec(GetMousePosition(), btn);
+            DrawRectangleRec(btn, hover ? LIGHTGRAY : DARKGRAY);
+            DrawText("Retry", btn.x + 30, btn.y + 10, 20, BLACK);
+
+            if (hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                resetGame();
+            }
+        }
+
         
         EndDrawing();
     }
@@ -229,4 +258,55 @@ int main(void) {
     CloseWindow();
     
     return 0;
+}
+
+void resetGame() {
+    printf("CQCCQCQCQCQCQqdqd");
+    // Réinitialisation des compteurs/verrous
+    vaguesCount   = 0;
+    waveCompleted = false;
+
+    // Libération des ballons
+    for (int i = 0; i < ballonCount; i++) {
+        if (ballons[i]) { freeBallon(ballons[i]); ballons[i] = NULL; }
+    }
+    ballonCount = 0;
+
+    // Libération des tours
+    for (int i = 0; i < towerCount; i++) {
+        if (towers[i]) { freeTower(towers[i]); towers[i] = NULL; }
+    }
+    towerCount = 0;
+
+    // Libération des projectiles
+    for (int i = 0; i < projectileCount; i++) {
+        if (projectiles[i]) {
+            freeProjectile(projectiles[i]);
+            projectiles[i] = NULL;
+        }
+    }
+    projectileCount = 0;
+
+    // Libération du chemin
+    if (path) {
+        free(path[0]);
+        free(path[1]);
+        free(path);
+    }
+
+    // Libération et régénération du labyrinthe (entrée/sortie aléatoires)
+    freeLabyrinthe(laby);
+    int labyWidth  = SCREEN_WIDTH  / CELL_SIZE;
+    int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
+    laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);
+    genererLabyrinthe(laby);
+
+    // Recalcul du chemin A*
+    pathLength = 0;
+    path = recherche_astar(laby,
+                           laby->entreeX[0], laby->entreeY[0],
+                           laby->sortieX[0], laby->sortieY[0],
+                           &pathLength);
+
+    frameCounter = 0;
 }
