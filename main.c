@@ -9,7 +9,7 @@
 #include "projectile.h"
 
 #define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 800
+#define SCREEN_HEIGHT 840
 #define CELL_SIZE 40
 
 #define MAX_BALLONS 2
@@ -25,7 +25,7 @@ int main(void) {
     SetTargetFPS(60);
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
     int labyWidth = SCREEN_WIDTH / CELL_SIZE;
-    int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
+    int labyHeight = (SCREEN_HEIGHT / CELL_SIZE);
     
     // Création du labyrinthe
     Labyrinthe *laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie

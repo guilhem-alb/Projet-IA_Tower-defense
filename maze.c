@@ -135,7 +135,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
             adjX = x + (entrySide == 3 ? 1 : (entrySide == 1 ? -1 : 0));
             adjY = y + (entrySide == 0 ? 1 : (entrySide == 2 ? -1 : 0));
             
-            if (positionValide(laby, adjX, adjY) && laby->grille[adjY][adjX].type == CHEMIN) {
+            if (positionValide(laby, adjX, adjY) && laby->grille[adjY][adjX].type == CHEMIN && positionValide(laby, adjX, adjY)) {
                 validEntry = true;
             }
         } while (!validEntry);
@@ -144,14 +144,26 @@ void genererLabyrinthe(Labyrinthe *laby) {
         laby->grille[y][x].type = ENTREE;
         laby->entreeX[i] = x;
         laby->entreeY[i] = y;
-        
+    
+    }
         // Placer la sortie du côté opposé
-        for (int j = 0; j < laby->numSorties; j++) {
+    for (int j = 0; j < laby->numSorties; j++) {
             int exitSide, exitX, exitY, adjExitX, adjExitY;
             bool validExit = false;
-            
-            // Déterminer le côté opposé
-            exitSide = (entrySide + 2) % 4;
+                    // Déterminer le côté opposé à une entrée aléatoire
+        int randomEntry = rand() % laby->numEntrees;
+        int entryX = laby->entreeX[randomEntry];
+        int entryY = laby->entreeY[randomEntry];
+        
+        // Déterminer le côté de l'entrée
+        int entrySide;
+        if (entryY == 0) entrySide = 0; // Haut
+        else if (entryX == laby->largeur - 1) entrySide = 1; // Droite
+        else if (entryY == laby->hauteur - 1) entrySide = 2; // Bas
+        else entrySide = 3; // Gauche
+        
+        // Déterminer le côté opposé pour la sortie
+        exitSide = (entrySide + 2) % 4;
             
             do {
                 switch (exitSide) {
@@ -181,7 +193,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
                 adjExitX = exitX + (exitSide == 3 ? 1 : (exitSide == 1 ? -1 : 0));
                 adjExitY = exitY + (exitSide == 0 ? 1 : (exitSide == 2 ? -1 : 0));
                 
-                if (positionValide(laby, adjExitX, adjExitY) && laby->grille[adjExitY][adjExitX].type == CHEMIN) {
+                if (positionValide(laby, adjExitX, adjExitY) && laby->grille[adjExitY][adjExitX].type == CHEMIN && laby->grille[exitY][exitX].type != ENTREE) {
                     validExit = true;
                 }
             } while (!validExit);
@@ -192,7 +204,6 @@ void genererLabyrinthe(Labyrinthe *laby) {
             laby->sortieY[j] = exitY;   
         }
     }
-}
 
 // Libération de la mémoire du labyrinthe
 void freeLabyrinthe(Labyrinthe *laby) {
