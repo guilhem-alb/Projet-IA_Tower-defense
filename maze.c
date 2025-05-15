@@ -86,13 +86,8 @@ void prim(Labyrinthe *laby) {
     laby->grille[x][y].visite = true;
     ajouterCase(&casesATraiter, laby->grille[x][y]);
     while(!listeCasesVide(casesATraiter)) {
-        
         currCase = prendreAuHasard(&casesATraiter);
-        x = currCase.xCoord;
-        y = currCase.yCoord;
-        
         traiterVoisins(laby, currCase, &casesATraiter);
-        
     }
 }
 
@@ -135,7 +130,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
             adjX = x + (entrySide == 3 ? 1 : (entrySide == 1 ? -1 : 0));
             adjY = y + (entrySide == 0 ? 1 : (entrySide == 2 ? -1 : 0));
             
-            if (positionValide(laby, adjX, adjY) && laby->grille[adjY][adjX].type == CHEMIN && positionValide(laby, adjX, adjY)) {
+            if (positionValide(laby, adjX, adjY) && laby->grille[adjY][adjX].type == CHEMIN && laby->grille[y][x].type == MUR) {
                 validEntry = true;
             }
         } while (!validEntry);
@@ -193,7 +188,7 @@ void genererLabyrinthe(Labyrinthe *laby) {
                 adjExitX = exitX + (exitSide == 3 ? 1 : (exitSide == 1 ? -1 : 0));
                 adjExitY = exitY + (exitSide == 0 ? 1 : (exitSide == 2 ? -1 : 0));
                 
-                if (positionValide(laby, adjExitX, adjExitY) && laby->grille[adjExitY][adjExitX].type == CHEMIN && laby->grille[exitY][exitX].type != ENTREE) {
+                if (positionValide(laby, adjExitX, adjExitY) && laby->grille[adjExitY][adjExitX].type == CHEMIN && laby->grille[exitY][exitX].type == MUR) {
                     validExit = true;
                 }
             } while (!validExit);
