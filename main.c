@@ -8,14 +8,20 @@
 #include "tower.h"
 #include "projectile.h"
 
-#define SCREEN_WIDTH 1000
-#define SCREEN_HEIGHT 840
+
 #define CELL_SIZE 40
+// Doivent toujours être un multiple impair de CELL_SIZE pour la bonne génération du labyrinthe
+#define SCREEN_WIDTH 1000   
+#define SCREEN_HEIGHT 840   
+
 
 #define MAX_BALLONS 2
 #define MAX_TOWERS 50
 #define MAX_PROJECTILES 200
 #define MAX_VAGUES 3
+
+#define NOMBRE_ENTREES 2
+#define NOMBRE_SORTIES 2
 
 // Prototypes
 void resetGame();
@@ -25,18 +31,18 @@ Labyrinthe *laby;
 int **path;
 int pathLength;
 
-Ballon     *ballons[MAX_BALLONS];
-int         ballonCount   = 0;
-int         frameCounter  = 0;
+Ballon *ballons[MAX_BALLONS];
+int ballonCount   = 0;
+int frameCounter  = 0;
 
-Tower      *towers[MAX_TOWERS];
-int         towerCount    = 0;
+Tower *towers[MAX_TOWERS];
+int towerCount    = 0;
 
 Projectile *projectiles[MAX_PROJECTILES];
-int         projectileCount = 0;
+int projectileCount = 0;
 
-int         vaguesCount   = 0;
-bool        waveCompleted = false;
+int vaguesCount   = 0;
+bool waveCompleted = false;
 
 
 
@@ -49,9 +55,13 @@ int main(void) {
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
     int labyWidth = SCREEN_WIDTH / CELL_SIZE;
     int labyHeight = (SCREEN_HEIGHT / CELL_SIZE);
+    if(labyWidth % 2 != 1 || labyHeight % 2 != 1) {
+        perror("taille de labyrinthe incorrecte");
+        return 1;
+    }
     
     // Création du labyrinthe
-    laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);  // 1 entrée, 1 sortie
+    laby = initialiserLabyrinthe(labyWidth, labyHeight, NOMBRE_ENTREES, NOMBRE_SORTIES);  // 1 entrée, 1 sortie
     
     // Génération du labyrinthe
     genererLabyrinthe(laby);
@@ -261,9 +271,8 @@ int main(void) {
 }
 
 void resetGame() {
-    printf("CQCCQCQCQCQCQqdqd");
     // Réinitialisation des compteurs/verrous
-    vaguesCount   = 0;
+    vaguesCount = 0;
     waveCompleted = false;
 
     // Libération des ballons
@@ -298,7 +307,7 @@ void resetGame() {
     freeLabyrinthe(laby);
     int labyWidth  = SCREEN_WIDTH  / CELL_SIZE;
     int labyHeight = SCREEN_HEIGHT / CELL_SIZE;
-    laby = initialiserLabyrinthe(labyWidth, labyHeight, 2, 1);
+    laby = initialiserLabyrinthe(labyWidth, labyHeight, NOMBRE_ENTREES, NOMBRE_SORTIES);
     genererLabyrinthe(laby);
 
     // Recalcul du chemin A*
