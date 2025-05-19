@@ -10,10 +10,11 @@ Ballon Laby Defense est un jeu où vous devez défendre un labyrinthe généré 
 
 ### Fonctionnalités
 - Génération procédurale de labyrinthes
-- Algorithme A* pour le pathfinding des ballons
+- Pathfinding intelligent des ballons pour éviter les tours basé sur A*
 - Placement stratégique de tours de défense
 - Multiples vagues d'ennemis
 - Projectiles avec ciblage automatique
+- Système de points de vie et de monnaie pour poser les tours
 
 ## Captures d'écran
 
@@ -55,3 +56,6 @@ cd ballon-laby-defense
 
 # Compiler le jeu
 make
+
+# Lancer l'exécutable
+./bloons_maze_battle
