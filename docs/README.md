@@ -2,7 +2,7 @@
 
 Un jeu de type tower defense dans un labyrinthe généré aléatoirement, développé en C avec la bibliothèque raylib.
 
-![Screenshot du jeu](screenshots/gameplay.png)
+![Screenshot du jeu](docs/Screen_partie.png)
 
 ## Description
 
