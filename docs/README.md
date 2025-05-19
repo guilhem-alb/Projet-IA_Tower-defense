@@ -2,7 +2,7 @@
 
 Un jeu de type tower defense dans un labyrinthe généré aléatoirement, développé en C avec la bibliothèque raylib.
 
-![Screenshot du jeu](docs/Screen_partie.png)
+![Screenshot du jeu](Screen_partie.png)
 
 ## Description
 
@@ -20,12 +20,12 @@ Ballon Laby Defense est un jeu où vous devez défendre un labyrinthe généré 
 
 <table>
   <tr>
-    <td><img src="docs/Screen_debut.png" alt="Début de partie" width="400"/></td>
-    <td><img src="docs/Screen_partie.png" alt="Milieu de partie" width="400"/></td>
+    <td><img src="Screen_debut.png" alt="Début de partie" width="400"/></td>
+    <td><img src="Screen_partie.png" alt="Milieu de partie" width="400"/></td>
   </tr>
   <tr>
-    <td><img src="docs/Screen_win.png" alt="Win" width="400"/></td>
-    <td><img src="docs/Screen_gameover.png" alt="Fin de partie" width="400"/></td>
+    <td><img src="Screen_win.png" alt="Win" width="400"/></td>
+    <td><img src="Screen_gameover.png" alt="Fin de partie" width="400"/></td>
   </tr>
 </table>
 
