@@ -1,4 +1,4 @@
-# Ballon Laby Defense
+# Bloons maze battle
 
 Un jeu de type tower defense dans un labyrinthe généré aléatoirement, développé en C avec la bibliothèque raylib.
 
@@ -6,7 +6,7 @@ Un jeu de type tower defense dans un labyrinthe généré aléatoirement, dével
 
 ## Description
 
-Ballon Laby Defense est un jeu où vous devez défendre un labyrinthe généré procéduralement contre des vagues de ballons. Le jeu utilise l'algorithme de Prim pour générer un labyrinthe unique à chaque partie, et l'algorithme A* pour calculer les chemins des ballons.
+Bloons maze battle est un jeu où vous devez défendre un labyrinthe généré procéduralement contre des vagues de ballons. Le jeu utilise l'algorithme de Prim pour générer un labyrinthe unique à chaque partie, et l'algorithme A* pour calculer les chemins des ballons.
 
 ### Fonctionnalités
 - Génération procédurale de labyrinthes
