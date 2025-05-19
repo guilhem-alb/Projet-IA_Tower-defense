@@ -18,12 +18,12 @@
 #define MAX_BALLONS 10
 #define MAX_TOWERS 50
 #define MAX_PROJECTILES 200
-#define MAX_VAGUES 3
+#define MAX_VAGUES 5
 
 #define NOMBRE_ENTREES 2
 #define NOMBRE_SORTIES 2
 
-#define VIE_DE_DEPART 3
+#define VIE_DE_DEPART 10
 #define ARGENT_DE_DEPART 9
 #define COUT_TOUR 3
 
