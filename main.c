@@ -57,7 +57,7 @@ int main(void) {
     // Initialiser le générateur de nombres aléatoires
     srand(time(NULL));
     // Initialisation de la fenêtre
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ballon laby Defense");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "bloons maze battle");
     SetTargetFPS(60);
     // Calcul de la taille du labyrinthe en fonction de la taille de l'écran
     int labyWidth = SCREEN_WIDTH / CELL_SIZE;

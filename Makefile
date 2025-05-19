@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Wpointer-arith -Wreturn-type -Wcast-qual -fstack-protect
 LIBS = -lraylib -lGL -lm -lpthread -ldl
 SRCS = main.c maze.c astar.c ballon.c tower.c projectile.c listeCases.c
 OBJS = $(SRCS:.c=.o)
-EXEC = balloon_maze_defense
+EXEC = bloons_maze_battle
 
 all: $(EXEC)
 
