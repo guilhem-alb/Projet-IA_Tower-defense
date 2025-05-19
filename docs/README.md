@@ -20,12 +20,12 @@ Ballon Laby Defense est un jeu où vous devez défendre un labyrinthe généré 
 
 <table>
   <tr>
-    <td><img src="screenshots/start_game.png" alt="Début de partie" width="400"/></td>
-    <td><img src="screenshots/mid_game.png" alt="Milieu de partie" width="400"/></td>
+    <td><img src="docs/Screen_debut.png" alt="Début de partie" width="400"/></td>
+    <td><img src="docs/Screen_partie.png" alt="Milieu de partie" width="400"/></td>
   </tr>
   <tr>
-    <td><img src="screenshots/tower_placement.png" alt="Placement de tours" width="400"/></td>
-    <td><img src="screenshots/game_over.png" alt="Fin de partie" width="400"/></td>
+    <td><img src="docs/Screen_win.png" alt="Win" width="400"/></td>
+    <td><img src="docs/Screen_gameover.png" alt="Fin de partie" width="400"/></td>
   </tr>
 </table>
 
