@@ -2,6 +2,7 @@
 #define ASTAR_H
 
 #include "maze.h"
+#include "tower.h"
 
 // Structure pour un nœud dans l'algorithme A*
 typedef struct AStarNode {
@@ -18,7 +19,8 @@ typedef struct {
     int taille;           // Nombre d'éléments dans la liste
 } NodeList;
 
-// Prototypes des fonctions
+
+// Toolbox NodeList
 NodeList* createNodeList();
 void freeNodeList(NodeList *list);
 void ajoutNode(NodeList *list, AStarNode *node);
@@ -26,7 +28,9 @@ AStarNode* suppNodeF(NodeList *list);
 bool existeNode(NodeList *list, int x, int y);
 AStarNode* recupNode(NodeList *list, int x, int y);
 void suppNode(NodeList *list, AStarNode *node);
+
+// Fonctions A*
 int distance(int x1, int y1, int x2, int y2);
-int** recherche_astar(Labyrinthe *laby, int startX, int startY, int arrivX, int arrivY, int *tailleChemin);
+int** recherche_astar(Labyrinthe *laby, int *tailleChemin, Tower **towers, int towersSize);
 
 #endif // ASTAR_H

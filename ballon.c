@@ -4,13 +4,13 @@
 #include "raylib.h"
 
 // Création d'un ballon
-Ballon* createBallon(int startX, int startY, int *cheminX, int *cheminY, int cheminLength, float vitesse) {
+Ballon* createBallon(int *cheminX, int *cheminY, int cheminLength, float vitesse) {
     Ballon *ballon = (Ballon*) malloc(sizeof(Ballon));
 
     
     // Position initiale (au centre de la cellule)
-    ballon->x = (float)startX;
-    ballon->y = (float)startY;
+    ballon->x = (float)cheminX[0];
+    ballon->y = (float)cheminY[0];
     ballon->vitesse = vitesse;
     ballon->cheminIndex = 0;
     ballon->cheminX = cheminX;
@@ -30,7 +30,7 @@ void freeBallon(Ballon *ballon) {
 }
 
 // Mise à jour de la position d'un ballon
-void updateBallon(Ballon *ballon) {
+void updateBallon(Ballon *ballon, int *vieJoueur) {
     if (!ballon->actif || ballon->cheminIndex >= ballon->cheminLength - 1) {
         ballon->actif = false;
         return;
@@ -66,6 +66,8 @@ void updateBallon(Ballon *ballon) {
         // Vérifier si on a atteint la fin du chemin
         if (ballon->cheminIndex >= ballon->cheminLength - 1) {
             ballon->actif = false;
+            (*vieJoueur)--; // le joueur perd un point de vie
+            printf("ballon sorti\n");
         }
     }
 }

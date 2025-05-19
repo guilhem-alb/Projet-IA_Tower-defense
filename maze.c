@@ -49,7 +49,7 @@ Labyrinthe* initialiserLabyrinthe(int largeur, int hauteur, int numEntrees, int 
 
 // fonction auxiliaire à Prim pour ajouter les voisins à la liste
 void traiterVoisins(Labyrinthe *laby, Case C, listeCases *L) {
-    int x = C.xCoord, y = C.yCoord;
+    int x = C.xCoord, y = C.yCoord, cnt = 0;
     int coordVoisins[4] = {(x - 2), (y - 2), (x + 2), (y + 2)}; // Toutes les cases voisines (à deux cases de distance)
     listeCases casesVisitees = creerListeCases();
     Case *currCase, caseAConnecter;
@@ -63,15 +63,20 @@ void traiterVoisins(Labyrinthe *laby, Case C, listeCases *L) {
                 currCase->ajoute = true;
             }
             // sinon on l'ajoute aux potentielles cases à connecter
-            else if(currCase->visite)
+            else if(currCase->visite) {
                 ajouterCase(&casesVisitees, *currCase);
+                cnt++;
+            }
         }
     }
     if(!listeCasesVide(casesVisitees)) {
-        // On le connecte à une voisine faisant partie du labyrinthe au hasard
-        caseAConnecter = prendreAuHasard(&casesVisitees);
-        laby->grille[(x + caseAConnecter.xCoord) / 2][(y + caseAConnecter.yCoord) / 2].type = CHEMIN;
-        laby->grille[x][y].visite = true;
+        // pour génerer plusieurs chemins dans le labyrinthe
+        for(int i = 0; i <= rand() % cnt; i++) {
+            // On le connecte à une voisine faisant partie du labyrinthe au hasard
+            caseAConnecter = prendreAuHasard(&casesVisitees);
+            laby->grille[(x + caseAConnecter.xCoord) / 2][(y + caseAConnecter.yCoord) / 2].type = CHEMIN;
+            laby->grille[x][y].visite = true;
+        }
     }
     freeMaillon(casesVisitees.liste);
 }

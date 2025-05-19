@@ -17,9 +17,9 @@ typedef struct {
 } Ballon;
 
 // Prototypes des fonctions
-Ballon* createBallon(int startX, int startY, int *cheminX, int *cheminY, int cheminLength, float speed);
+Ballon* createBallon(int *cheminX, int *cheminY, int cheminLength, float speed);
 void freeBallon(Ballon *ballon);
-void updateBallon(Ballon *ballon);
+void updateBallon(Ballon *ballon, int *vieJoueur);
 void drawBallon(Ballon *ballon, int cellSize);
 
 #endif // BALLON_H

@@ -18,7 +18,7 @@ typedef struct {
 // Prototypes des fonctions
 Projectile* createProjectile(float x, float y, Ballon *cible, float vitesse);
 void freeProjectile(Projectile *projectile);
-void updateProjectile(Projectile *projectile);
+void updateProjectile(Projectile *projectile, int *argentJoueur);
 void drawProjectile(Projectile *projectile, int cellSize);
 
 #endif // PROJECTILE_H

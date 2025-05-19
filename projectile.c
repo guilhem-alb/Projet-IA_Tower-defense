@@ -27,7 +27,7 @@ void freeProjectile(Projectile *projectile) {
 }
 
 // Mise à jour d'un projectile
-void updateProjectile(Projectile *projectile) {
+void updateProjectile(Projectile *projectile, int *argentJoueur) {
     if (!projectile->actif) return;
     
     // Si la cible n'est plus actif, désactifr le projectile
@@ -67,6 +67,7 @@ void updateProjectile(Projectile *projectile) {
         if (projectile->cible != NULL) {
             projectile->cible->actif = false;
         }
+        (*argentJoueur)++;
     }
 }
 
