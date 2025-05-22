@@ -51,8 +51,8 @@ sudo make install
 cd ../..
 
 # Cloner le dépôt
-git clone https://github.com/votreusername/ballon-laby-defense.git
-cd ballon-laby-defense
+git clone https://github.com/guilhem-alb/Projet-IA_Tower-defense.git
+cd Projet-IA_Tower-defense
 
 # Compiler le jeu
 make
